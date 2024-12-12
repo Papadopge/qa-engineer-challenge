@@ -35,14 +35,23 @@ Ensure the following prerequisites are installed on your system:
 The project is structured as follows:
 
 ├── node_modules/          # Dependencies
+
 ├── tests/                 # Test scripts
+
 │   ├── rentAdsTest.spec.js  # Test file for rent ad functionalities
+
 ├── locators.js            # File containing element locators
+
 ├── playwright.config.js   # Playwright configuration file
+
 ├── package.json           # Project metadata and scripts
+
 ├── package-lock.json      # Dependency tree
+
 ├── test-results/          # Test results and reports
+
 ├── sample-run-report/     # Sample HTML report
+
 └── README.md              # Project documentation
 
 Key Files:
