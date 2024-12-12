@@ -1,103 +1,124 @@
 const { test, expect } = require('@playwright/test');
-import { locators } from '../locators.js';  // ES Module import
+import { locators } from '../locators.js';
 
-let results;  // Will be set after applying filters and search.
+let results;
 
-test.beforeEach('Verify logo visibility on the page', async ({ page }) => {
-  // 1. Άνοιγμα της σελίδας και έλεγχος για το λογότυπο
-  await page.goto(locators.siteUrl);  // Assuming siteUrl is in locators.js
-  const logo = page.locator(locators.headerLogo);  // Assuming headerLogo is in locators.js
-  await expect(logo).toBeVisible();  // Assert logo is visible
-  // 2. Accept cookies if the banner appears
-  // Accept cookies
+test.beforeEach('Navigate to page', async ({ page }) => {
+  await page.goto(locators.siteUrl);
+  const logo = page.locator(locators.headerLogo);
+  await expect(logo).toBeVisible();
   const acceptCookiesButton = page.locator(locators.acceptCookiesButton);
+  await expect(acceptCookiesButton).toBeVisible();
   if (await acceptCookiesButton.isVisible()) {
-    await acceptCookiesButton.click(); // Click to accept cookies
+    await acceptCookiesButton.click();
   }
 });
 
 test('Verify rent ads functionality on xe.gr', async ({ page }) => {
-    await page.waitForTimeout(20000);
+  // Check if the button is already set to "Ενοικίαση"
+  const transactionText = await page.textContent(locators.propertyTransactionName);
+  expect(transactionText).toBe('Ενοικίαση');
 
-  // 2. Επιλογή "Ενοικίαση" και Αναζήτηση περιοχής "Παγκράτι"
-//   await page.locator('text=Ενοικίαση').click();
-//   const searchField = page.locator('[placeholder="Πληκτρολογήστε περιοχή"]');
-//   await searchField.fill('Παγκράτι');
+  // Click on search area input field and search for "Παγκράτι"
+  const searchAreaInputFieldLocator = page.locator(locators.searchAreaInputFieldLocator);
+  await searchAreaInputFieldLocator.click();
+  await searchAreaInputFieldLocator.fill('Παγκράτι');
+  const option = await page.locator(locators.dropdownOptionPagkratiAthens);
+  await option.click();
 
-//   // Περιμένετε το autocomplete και επιλέξτε όλες τις προτάσεις
-//   await page.waitForSelector('.autocomplete-suggestions');
-//   const suggestions = page.locator('.autocomplete-suggestions div');
-//   await suggestions.click({ multiple: true });
+  // Check if the autocomplete is active
+  const autocompleteContainerSelector = 'div.geo-area-autocomplete-container';
+  const isActive = await page.locator(autocompleteContainerSelector).evaluate((element) =>
+    element.classList.contains('active')
+  );
+  expect(isActive).toBeTruthy();
 
-//   // 3. Εφαρμογή φίλτρων (Τιμή & Τετραγωνικά)
-//   const priceMin = page.locator('#price_min');
-//   const priceMax = page.locator('#price_max');
-//   const areaMin = page.locator('#area_min');
-//   const areaMax = page.locator('#area_max');
+  // Click Αναζήτηση button
+  const searchButton = page.locator(locators.submitSearchButton);
+  await searchButton.click();
 
-//   await priceMin.fill('200');
-//   await priceMax.fill('700');
-//   await areaMin.fill('75');
-//   await areaMax.fill('150');
+  //Verify that we navigate to the expected url
+  const expectedUrl = 'https://www.xe.gr/property/results?transaction_name=rent&item_type=re_residence&geo_place_ids[]=ChIJy1stSUK9oRQRi9ObJcOmO20';
+  await expect(page).toHaveURL(expectedUrl);
 
-//   // Υποβολή αναζήτησης
-//   await page.locator('button:has-text("Αναζήτηση")').click();
+  // Set price filter
+  const priceFilterButton = page.locator(locators.priceFilterButton);
+  await priceFilterButton.click();
+  const priceMin = page.locator(locators.minimumPriceInput);
+  const priceMax = page.locator(locators.maximumPriceInput);
+  await priceMin.fill('200');
+  await priceMax.fill('700');
 
-//   // Save the results locator for later use in each test
-//   results = page.locator('.property-card');
-});
+  // Set square footage filter
+  const sizeFilterButton = page.locator(locators.sizeFilterButton);
+  await sizeFilterButton.click();
+  const sizeMin = page.locator(locators.minimumSizeInput);
+  const sizeMax = page.locator(locators.maximumSizeInput);
+  await sizeMin.fill('75');
+  await sizeMax.fill('150');
 
-// test('Verify rent ads functionality on xe.gr', async () => {
-//   // 4. Έλεγχος αποτελεσμάτων
-//   const count = await results.count();
+  // Assert that Square footage and prices are within the range we specified in the search
+  const adLocators = await page.locator('.common-ad').all();
 
-//   for (let i = 0; i < count; i++) {
-//     const card = results.nth(i);
+  console.log(`Find ${adLocators.length} properties`);
 
-//     // Τιμή
-//     const price = await card.locator('.price').textContent();
-//     const priceValue = parseInt(price.replace('€', '').replace(',', ''));
-//     expect(priceValue).toBeGreaterThanOrEqual(200);
-//     expect(priceValue).toBeLessThanOrEqual(700);
+  for (let ad of adLocators) {
+    let priceText = await ad.locator('.property-ad-price').innerText().catch(() => null); // if price does not exist, return null
+    let sizeText = await ad.locator('h3[data-testid="property-ad-title"]').innerText().catch(() => null); // if size does not exist, return null
 
-//     // Τετραγωνικά
-//     const area = await card.locator('.area').textContent();
-//     const areaValue = parseInt(area.replace('m²', '').replace(',', ''));
-//     expect(areaValue).toBeGreaterThanOrEqual(75);
-//     expect(areaValue).toBeLessThanOrEqual(150);
+    console.log(`Property with price: ${priceText} and size: ${sizeText}`);
+    const price = parseInt(priceText.replace('€', '').replace(/\s+/g, '').trim(), 10);
+    const sizeMatch = sizeText.match(/(\d+)\s*τ\.μ\./);
+    const size = sizeMatch ? parseInt(sizeMatch[1], 10) : NaN;
 
-//     // Εικόνες
-//     const images = await card.locator('.image-carousel img').count();
-//     expect(images).toBeLessThanOrEqual(30);
-//   }
-// });
+    console.log(`Price: ${price} €, Size: ${size} τ.μ.`);
 
-// test('Verify sorting by price descending', async ({ page }) => {
-//   // 5. Ταξινόμηση κατά τιμή (Φθίνουσα)
-//   await page.locator('button:has-text("Ταξινόμηση")').click();
-//   await page.locator('text=Κατά φθίνουσα τιμή').click();
+    expect(price).toBeGreaterThanOrEqual(200);
+    expect(price).toBeLessThanOrEqual(700);
+    expect(size).toBeGreaterThanOrEqual(75);
+    expect(size).toBeLessThanOrEqual(150);
+  }
 
-//   const sortedPrices = [];
-//   const count = await results.count();
+  //No ad contains more than 30 pictures
+  await page.waitForSelector('div.slick-slider');
+  const carousels = await page.$$('div.slick-slider');
+  
+  for (let carousel of carousels) {
+    const images = await carousel.$$('div.slick-slide:not(.slick-cloned)');
+    const imageCount = images.length;
+    console.log(`This property contains ${imageCount} images.`);
+    
+    if (imageCount > 30) {
+      console.log('Found carousel with more than 30 images!');
+    }
+  }
 
-//   for (let i = 0; i < count; i++) {
-//     const card = results.nth(i);
-//     const price = await card.locator('.price').textContent();
-//     const priceValue = parseInt(price.replace('€', '').replace(',', ''));
-//     sortedPrices.push(priceValue);
-//   }
+  // Assert that when we sort the ads by descending price, the search results are correctly sorted.
+  const propertySortingDropdown = page.locator(locators.propertySortingDropdown);
+  await propertySortingDropdown.click();
+  const priceDesc = page.locator(locators.priceDesc);
+  await priceDesc.click();
 
-//   const sortedDescending = [...sortedPrices].sort((a, b) => b - a);
-//   expect(sortedPrices).toEqual(sortedDescending);
-// });
+  await page.waitForTimeout(2000);
 
-// test('Verify phone contact button visibility', async () => {
-//   // 6. Επαλήθευση Επικοινωνίας
-//   const count = await results.count();
+  const prices = await page.$$eval('.property-ad-price', prices => prices.map(price => parseFloat(price.innerText.replace('€', '').replace(',', '').trim())));
+  
+  console.log('Ads sorted by descending price:');
+  prices.forEach((price, index) => {
+    console.log(`Ad ${index + 1}: €${price}`);
+  });
 
-//   for (let i = 0; i < count; i++) {
-//     const card = results.nth(i);
-//     const phoneButton = card.locator('button:has-text("Δείτε το τηλέφωνο")');
-//     await expect(phoneButton).toBeVisible();
-//   }
-// });
+  await page.waitForSelector('[data-testid="property-ad-855603727"] [data-testid="property-ad-url"]');
+  await page.click('[data-testid="property-ad-855603727"] [data-testid="property-ad-url"]');
+  await page.waitForSelector(locators.modalPopUpAdTitle), { state: 'visible' };
+
+  // Verify that the contact phone in each ad is not visible - instead, a clickable button is shown which in turn reveals the contact phone in a pop-up if pressed.
+  const callActionButton = page.locator(locators.callActionButton);
+  await callActionButton.click();
+
+  await page.waitForSelector(locators.modalPopUpAdTitle), { state: 'visible' };
+  await page.isVisible('text="Τηλέφωνο επικοινωνίας"');
+
+  });
+
+
