@@ -1,43 +1,64 @@
-# QA Automation Challenge
+**QA Automation Challenge**
 
 # Overview
-This project includes automated tests using Playwright with Javascript and the Playwright Test Runner. 
-The tests verify basic functionalities in the real estate ad search functionality on the xe.gr website.
+This project contains automated tests written in Playwright using JavaScript and the Playwright Test Runner.
+The tests validate the core functionalities of the real estate ad search feature on the xe.gr website.
 
 # Prerequisites
-Node.js & npm:
-Ensure you have Node.js (preferably the latest LTS version) and npm installed. Check your versions with:
+Ensure the following prerequisites are installed on your system:
 
-node -v
-npm -v
+- Node.js (latest LTS version recommended)
+  To check if Node.js is installed, run:
+  node -v
+  npm (comes with Node.js installation)
 
-# Development tool
-VS Code
+  To check if npm is installed, run:
+  npm -v
+  
+- Development Tool:
+  We recommend using Visual Studio Code (VS Code) as the primary development tool.
 
-# Set up the project
-git clone https://github.com/Papadopge/qa-engineer-challenge.git
-
-cd xe_automation_tests
-
-Install Dependencies: npm install
-
-Install Browsers for Playwright: npx playwright install
-
+# Set up the Project
+  Clone the repository:
+  git clone https://github.com/Papadopge/qa-engineer-challenge.git
+  
+  Navigate into the project directory:
+  cd xe_automation_tests
+  
+- Install dependencies:
+  npm install
+  
+- Install Playwright browsers:
+  npx playwright install
+  
 # Project Structure
-The project structure should be as below:
+The project is structured as follows:
 
-![image](https://github.com/user-attachments/assets/c3685189-b7df-4010-a73d-d9f2336f9cc5)
+├── node_modules/          # Dependencies
+├── tests/                 # Test scripts
+│   ├── rentAdsTest.spec.js  # Test file for rent ad functionalities
+├── locators.js            # File containing element locators
+├── playwright.config.js   # Playwright configuration file
+├── package.json           # Project metadata and scripts
+├── package-lock.json      # Dependency tree
+├── test-results/          # Test results and reports
+├── sample-run-report/     # Sample HTML report
+└── README.md              # Project documentation
 
-- The tests/rentAdsTest.spec.js file contains the test scripts.
-
-- locators.js file includes all the locators that we use into test scripts
+Key Files:
+tests/rentAdsTest.spec.js: Contains the test scripts.
+locators.js: Stores all the locators used in the test scripts for better modularity.
 
 # Running the Tests
+Execute the following command to run all tests:
 npx playwright test
 
-After the execution a test report opens automatically based on settings into playwright.config.js file.
-If not run this command: npx playwright show-report
+# Reporting
+View Test Report:
+By default, the test report will automatically open after the test execution (based on settings in playwright.config.js).
 
+If it does not open automatically, you can manually view the report by running:
+npx playwright show-report
 
 
 
