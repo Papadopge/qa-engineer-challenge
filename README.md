@@ -37,10 +37,11 @@ The project is structured as follows:
 ![image](https://github.com/user-attachments/assets/00cb1d81-e64c-4026-8daa-92858e089ae8)
 
 
-Key Files:
-tests/rentAdsTest.spec.js: Contains the test scripts.
+- Key Files:
 
-locators.js: Stores all the locators used in the test scripts for better modularity.
+  tests/rentAdsTest.spec.js: Contains the test scripts.
+
+  locators.js: Stores all the locators used in the test scripts for better modularity.
 
 # Running the Tests
 Execute the following command to run all tests:
