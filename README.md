@@ -11,17 +11,16 @@ Ensure you have Node.js (preferably the latest LTS version) and npm installed. C
 node -v
 npm -v
 
-# Set up the project
-Clone the Project (if using a repository): https://github.com/Papadopge/qa-engineer-challenge/tree/xe_automation_tests
+# Development tool
+VS Code
 
-git clone [<REPOSITORY_URL>](https://github.com/Papadopge/qa-engineer-challenge/tree/xe_automation_tests)
+# Set up the project
+git clone https://github.com/Papadopge/qa-engineer-challenge.git
 cd xe_automation_tests
 
-# Install Dependencies
-npm install
+Install Dependencies: npm install
 
-# Install Browsers for Playwright
-npx playwright install
+Install Browsers for Playwright: npx playwright install
 
 # Running the Tests
 npx playwright test
