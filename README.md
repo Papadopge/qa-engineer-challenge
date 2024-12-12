@@ -25,10 +25,20 @@ Install Browsers for Playwright: npx playwright install
 
 # Project Structure
 The project structure should be as below:
+
 ![image](https://github.com/user-attachments/assets/c3685189-b7df-4010-a73d-d9f2336f9cc5)
 
+- The tests/rentAdsTest.spec.js file contains the test scripts.
 
+- locators.js file includes all the locators that we use into test scripts
 
 # Running the Tests
 npx playwright test
+
+After the execution a test report opens automatically based on settings into playwright.config.js file.
+If not run this command: npx playwright show-report
+
+
+
+
 
