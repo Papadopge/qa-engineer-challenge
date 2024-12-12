@@ -16,6 +16,7 @@ VS Code
 
 # Set up the project
 git clone https://github.com/Papadopge/qa-engineer-challenge.git
+
 cd xe_automation_tests
 
 Install Dependencies: npm install
