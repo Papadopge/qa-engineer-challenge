@@ -23,6 +23,12 @@ Install Dependencies: npm install
 
 Install Browsers for Playwright: npx playwright install
 
+# Project Structure
+The project structure should be as below:
+![image](https://github.com/user-attachments/assets/c3685189-b7df-4010-a73d-d9f2336f9cc5)
+
+
+
 # Running the Tests
 npx playwright test
 
