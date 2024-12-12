@@ -39,6 +39,7 @@ The project is structured as follows:
 
 Key Files:
 tests/rentAdsTest.spec.js: Contains the test scripts.
+
 locators.js: Stores all the locators used in the test scripts for better modularity.
 
 # Running the Tests
@@ -46,11 +47,9 @@ Execute the following command to run all tests:
 npx playwright test
 
 # Reporting
-View Test Report:
 By default, the test report will automatically open after the test execution (based on settings in playwright.config.js).
 
-If it does not open automatically, you can manually view the report by running:
-npx playwright show-report
+If it does not open automatically, you can manually view the report by running: npx playwright show-report
 
 
 
