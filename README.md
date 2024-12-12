@@ -1,4 +1,4 @@
-**QA Automation Challenge**
+# QA Automation Challenge
 
 # Overview
 This project contains automated tests written in Playwright using JavaScript and the Playwright Test Runner.
@@ -34,25 +34,8 @@ Ensure the following prerequisites are installed on your system:
 # Project Structure
 The project is structured as follows:
 
-├── node_modules/          # Dependencies
+![image](https://github.com/user-attachments/assets/00cb1d81-e64c-4026-8daa-92858e089ae8)
 
-├── tests/                 # Test scripts
-
-│   ├── rentAdsTest.spec.js  # Test file for rent ad functionalities
-
-├── locators.js            # File containing element locators
-
-├── playwright.config.js   # Playwright configuration file
-
-├── package.json           # Project metadata and scripts
-
-├── package-lock.json      # Dependency tree
-
-├── test-results/          # Test results and reports
-
-├── sample-run-report/     # Sample HTML report
-
-└── README.md              # Project documentation
 
 Key Files:
 tests/rentAdsTest.spec.js: Contains the test scripts.
