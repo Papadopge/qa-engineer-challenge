@@ -37,7 +37,7 @@ test('Verify rent ads functionality on xe.gr', async ({ page }) => {
   const searchButton = page.locator(locators.submitSearchButton);
   await searchButton.click();
 
-  //Verify that we navigate to the expected url
+  // Verify that we navigate to the expected url
   const expectedUrl = 'https://www.xe.gr/property/results?transaction_name=rent&item_type=re_residence&geo_place_ids[]=ChIJy1stSUK9oRQRi9ObJcOmO20';
   await expect(page).toHaveURL(expectedUrl);
 
@@ -79,7 +79,7 @@ test('Verify rent ads functionality on xe.gr', async ({ page }) => {
     expect(size).toBeLessThanOrEqual(150);
   }
 
-  //No ad contains more than 30 pictures
+  // No ad contains more than 30 pictures
   await page.waitForSelector('div.slick-slider');
   const carousels = await page.$$('div.slick-slider');
   

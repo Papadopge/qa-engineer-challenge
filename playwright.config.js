@@ -2,12 +2,15 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
-  reporter: [['html', { outputFolder: 'sample-run-report', open: 'never' }]],
+  reporter: [
+    ['list'], // Displays the test progress in the terminal
+    ['html', { outputFolder: 'playwright-report', open: 'always' }] // Generates an HTML report
+  ],
   use: {
     browserName: 'chromium',
-    headless: false, // Τρέξε σε headless mode
+    headless: false,
     viewport: { width: 1280, height: 720 },
     actionTimeout: 10000,
-    baseURL: 'https://www.xe.gr/property/', // URL της σελίδας
+    baseURL: 'https://www.xe.gr/property/', 
   },
 });
